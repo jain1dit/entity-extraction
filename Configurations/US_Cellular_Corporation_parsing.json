@@ -1,0 +1,104 @@
+[
+	{"flow":"Prepaid Registration",
+	"requires_attachment": true,
+	"atoms":[
+		{"RegexExtractor": {
+			"entity_name": "Customer ID",
+			"inclusion_list": ["Customer id"],
+			"inclusion_offset": 1000,
+		    "extraction_regex": "(^|\\D)\\d{9}(\\b|\\D)",
+	        "unique_indicator": true,
+	        "integer_indicator": true,
+		"multiline": false
+			}
+		},
+		{"UsccPrepaidRegistrationExtractor": {
+                        "entity_name": "Attachment"
+                        }
+                }
+		]
+	},
+	{"flow":"Cancel FA",
+	"requires_attachment": false,
+	"atoms":[
+	    	{"RegexExtractor": {
+			"entity_name": "Customer ID",
+			"inclusion_list": ["Customer id"],
+			"inclusion_offset": 20,
+			"exclusion_list": ["\\bFA\\b","FA_ID","FA ID","Cancel FA","cancel the following FA","please close FA","FA#","FA Cancel"],
+			"exclusion_offset": 20,
+		    "extraction_regex": "(^|\\D)\\d{9}(\\b|\\D)",
+	        "integer_indicator": true
+			}
+		},
+	        {"RegexExtractor": {
+			"entity_name": "FA_ID",
+			"inclusion_list": ["\\bFA\\b","FA_ID","FA ID","Cancel FA","cancel the following FA","please close FA","FA#","FA Cancel"],
+			"inclusion_offset": 80,
+			"exclusion_list": ["Customer id"],
+			"exclusion_offset": 20,
+		    "extraction_regex": "(^|\\D)\\d{9}(\\b|\\D)",
+	        "integer_indicator": true
+			}
+		}
+	]
+	},
+	{"flow":"PREPAID CUSTOMER WITHOUT SERVICE",
+	"requires_attachment": false,
+	"atoms":[
+		{"RegexExtractor": {
+			"entity_name": "Customer_ID",
+			"inclusion_list": ["Customer id"],
+			"inclusion_offset": 20,
+		    "extraction_regex": "(^|\\D)\\d{9}(\\b|\\D)",
+	        "unique_indicator": true,
+	        "integer_indicator": true
+			}
+		},
+		{"PhoneNumberExtractor": {
+			"entity_name": "MDN",
+			"inclusion_list": ["MDN"],
+			"inclusion_offset": 20
+			}
+		}]
+	},
+	{"flow":"Billing Rejects",
+	"requires_attachment": false,
+	"atoms":[
+		{"RegexExtractor": {
+			"entity_name": "Defect ID",
+			"inclusion_list": ["BILLING_CYCLE","BILL_CYCLE","defect","hold"],
+			"inclusion_offset": 100,
+		    "extraction_regex": "(\\D\\d?\\d?\\d{5})(\\D|$)",
+	        "integer_indicator": true
+			}
+		},
+		{"RegexExtractor": {
+			"entity_name": "Defect ID",
+		    "extraction_regex": "(D(\\#?))(\\d?\\d?\\d{5})(\\D|$)",
+	        "integer_indicator": true
+			}
+		}]
+	},
+	{"flow":"USCC ESN",
+	"requires_attachment": false,
+	"atoms":[
+		{"RegexExtractor": {
+			"entity_name": "ESN_MEID",
+			"inclusion_list": ["esn","meid","esn/meid"],
+			"inclusion_offset": 30,
+		    "extraction_regex": "(^|\\D)\\d?\\d{17}(\\b|\\D)",
+	        "integer_indicator": true
+			}
+		}]
+	},
+	{"flow":"PULL BILLS AFP",
+        "requires_attachment": false,
+        "atoms":[
+                {"RegexExtractor": {
+                        "entity_name": "AFP_NAME",
+                    "extraction_regex": "DD.USC.\\d{4}.\\d{2}.\\d{4}.\\*.afp"
+                        }
+                }]
+        }
+]

@@ -1,0 +1,15 @@
+[
+	{"flow":"Stuck Order",
+	"requires_attachment": false,
+	"atoms":[
+		{"RegexExtractor": {
+				"entity_name": "Order_Number",
+				"extraction_regex": "((?<=\\D)|(?<=\\b)|(?<=''))(\\d{9})((?=\\b)|(?=\\s)|(?=\\D))",
+				"integer_indicator": false,
+				"inclusion_list": ["orden"],
+				"inclusion_offset": 20
+				}
+			}
+	]
+	}
+]

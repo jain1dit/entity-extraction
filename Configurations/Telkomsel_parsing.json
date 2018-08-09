@@ -1,0 +1,66 @@
+[
+	{"flow":"Notify Billing",
+	"requires_attachment": true,
+	"atoms":[
+	{
+                "TelkomselNotifyBillingExtractor": {
+                        "entity_name": "Order_number"
+                        }
+                },
+		{"RegexExtractor": {
+			"entity_name": "Order_number",
+			"extraction_regex": "((?<=\\D)|(?<=\\b)|(?<=''))(\\d{9})A?((?=\\b)|(?=\\s)|(?=\\D))",
+			"inclusion_list": ["order"],
+			"inclusion_offset": 40
+			}
+		},
+		{"RegexExtractor": {
+			"entity_name": "MSISDN",
+			"extraction_regex":"((?<=\\D)|(?<=\\b)|(?<=''))62(\\d{10,11})((?=\\b)|(?=\\s)|(?=\\D))",
+			"integer_indicator": true,
+			"inclusion_list": ["msisdn"],
+			"inclusion_offset": 20
+			}
+		}
+	]
+	},
+	{"flow":"Subscriber status check",
+	"requires_attachment": false,
+	"atoms":[
+		{"RegexExtractor": {
+			"entity_name": "MSISDN",
+			"extraction_regex":"((?<=\\D)|(?<=\\b)|(?<=''))62(\\d{10,11})((?=\\b)|(?=\\s)|(?=\\D))",
+			"integer_indicator": true,
+			"inclusion_list": ["msisdn"],
+			"inclusion_offset": 20
+			}
+		}
+	]
+	},
+	{"flow":"Subscriber refresh / alignment",
+	"requires_attachment": false,
+	"atoms":[
+		{"RegexExtractor": {
+			"entity_name": "MSISDN",
+			"extraction_regex":"((?<=\\D)|(?<=\\b)|(?<=''))62(\\d{10,11})((?=\\b)|(?=\\s)|(?=\\D))",
+			"integer_indicator": true,
+			"inclusion_list": ["msisdn"],
+			"inclusion_offset": 20
+			}
+		}
+	]
+	},
+	{"flow":"Resume MSISDN - AC status",
+	"requires_attachment": false,
+	"atoms":[
+		{"RegexExtractor": {
+			"entity_name": "MSISDN",
+			"extraction_regex":"((?<=\\D)|(?<=\\b)|(?<=''))62(\\d{10,11})((?=\\b)|(?=\\s)|(?=\\D))",
+			"integer_indicator": true,
+			"inclusion_list": ["msisdn"],
+			"inclusion_offset": 20
+			}
+		}
+	]
+	}
+]

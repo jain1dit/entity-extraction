@@ -1,0 +1,158 @@
+[
+	{"flow":"Age_Out",
+	"requires_attachment": false,
+	"atoms":[
+		{"XlcomMsisdnExtractor": {
+			"entity_name": "MSISDN",
+			"inclusion_list": ["Description:"],
+			"inclusion_offset": 4000
+			}
+		}
+	]
+	},
+	{"flow":"Customer_Booking",
+	"requires_attachment": false,
+	"atoms":[
+		{"XlcomMsisdnExtractor": {
+			"entity_name": "MSISDN",
+			"inclusion_list": ["Description:"],
+			"inclusion_offset": 4000
+			}
+		}
+	]
+	},
+	{"flow":"Unsync CM CRM",
+	"requires_attachment": false,
+	"atoms":[
+		{"XlcomMsisdnExtractor": {
+			"entity_name": "MSISDN",
+			"inclusion_list": ["Description:"],
+			"inclusion_offset": 4000
+			}
+		}
+	]
+	},
+	{"flow":"Quota NUD",
+	"requires_attachment": false,
+	"atoms":[
+		{"XlcomMsisdnExtractor": {
+			"entity_name": "MSISDN",
+			"inclusion_list": ["msdn","msisdn","nomor","User Name","Master"],
+			"inclusion_offset": 40,
+			"multiple_values": false
+			}
+		},
+		{"RegexExtractor": {
+			"entity_name": "SOCCD",
+			"extraction_regex": "((?<==)|(?<=:))\\s*\\d{6,9}(\\s*,\\s*\\d{6,9}){1,3}((?<=\\n)|(?<=\\b)|(?<=\\s))|((?<==)|(?<=:))\\s*\\d{6,9}(?!])((?<=\\n)|(?<=\\b)|(?<=\\s))",
+			"inclusion_list": ["soc_cd","SOC_CD","soccd","SOCCD","SOC"],
+			"inclusion_offset": 20,
+			"remove_char": " "
+			}
+		},
+		{"RegexExtractor": {
+			"entity_name": "Service",
+			"extraction_regex": "(?<=Complaint)(\\s*:\\s*)((Data\\sService|Combo\\sPackage|Voice)?)(?=\\s*:\\s*Quota)",
+			"remove_char": " ",
+			"replace_char": [":",""]
+			}
+		},
+		{"DateTimeExtractor": {
+			"entity_name": "ISSUE_DATE",
+			"inclusion_list": ["ISSUE_DATE","ask","cust sudah rec","aktivasi","activation date","waktu","tf","time frame","timeframe","Time Frame","Time frame","tanggal","t.frime","kejadian","WKT","Sejak kapan","Sejak kapan terjadi kendala","pada tgl","kapan","sudah aktif sejak"],
+			"inclusion_offset": 50,
+			"format_to_extract": 2,
+            "unique_indicator": false,
+			"multiple_values": false
+			}
+		}
+	]
+	},
+	{"flow":"Wrong Charging",
+	"requires_attachment": false,
+	"atoms":[
+		{"XlcomMsisdnExtractor": {
+			"entity_name": "MSISDN",
+			"inclusion_list": ["Description:"],
+			"inclusion_offset": 4000
+			}
+		},
+		{"DateTimeExtractor": {
+			"entity_name": "ISSUE_DATE",
+			"inclusion_list": ["ISSUE_DATE","ask","cust sudah rec","aktivasi","activation date","waktu","tf","time frame","timeframe","Time Frame","Time frame","tanggal","t.frime","kejadian","WKT","Sejak kapan","Sejak kapan terjadi kendala","pada tgl","kapan","sudah aktif sejak"],
+			"inclusion_offset": 50,
+			"format_to_extract": 2,
+            "unique_indicator": false,
+			"multiple_values": false
+			}
+		},
+		{"RegexExtractor": {
+			"entity_name": "CGI",
+			"extraction_regex":"\\b510(.|-)\\d{2}(.|-)\\d{5}(.|-)\\d{5}(\\S*)",
+			"replace_char": ["-","."]
+			}
+		}
+	]
+	},
+	{"flow":"OC Insufficient Balance",
+	"requires_attachment": false,
+	"atoms":[
+		{"XlcomOcMsisdnExtractor": {
+			"entity_name": "MSISDN",
+			"inclusion_list": ["MSISDN", "ms"],
+			"inclusion_offset": 100,
+			"exclusion_list": ["VLR address", "B#", "Acd"],
+			"exclusion_offset": 50
+			}
+		}
+	]
+	},
+	{"flow":"Reset PIN DOMPUL",
+	"requires_attachment": false,
+	"atoms":[
+		{"XlcomMsisdnExtractor": {
+			"entity_name": "MSISDN",
+			"inclusion_list": ["msdn","msisdn","nomor","User Name","Master"],
+			"inclusion_offset": 40,
+			"multiple_values": false
+			}
+		}
+	]
+	},
+	{"flow":"Recurring Package Failed",
+	"requires_attachment": false,
+	"atoms":[
+		{"XlcomMsisdnExtractor": {
+			"entity_name": "MSISDN",
+			"inclusion_list": ["msdn","msisdn","nomor","User Name","Master"],
+			"inclusion_offset": 40,
+			"multiple_values": false
+			}
+		},
+		{"DateTimeExtractor": {
+			"entity_name": "ISSUE_DATE",
+			"inclusion_list": ["ISSUE_DATE","ask","cust sudah rec","aktivasi","activation date","waktu","tf","time frame","timeframe","Time Frame","Time frame","tanggal","t.frime","kejadian","WKT","Sejak kapan","Sejak kapan terjadi kendala","pada tgl","kapan","sudah aktif sejak"],
+			"inclusion_offset": 50,
+			"format_to_extract": 2,
+            "unique_indicator": false,
+			"multiple_values": false
+			}
+		},
+		{"RegexExtractor": {
+			"entity_name": "SOCCD",
+			"extraction_regex": "((?<==)|(?<=:))\\s*\\d{6,9}(\\s*,\\s*\\d{6,9}){1,3}((?<=\\n)|(?<=\\b)|(?<=\\s))|((?<==)|(?<=:))\\s*\\d{6,9}(?!])((?<=\\n)|(?<=\\b)|(?<=\\s))",
+			"inclusion_list": ["soc_cd","SOC_CD","soccd","SOCCD","SOC"],
+			"inclusion_offset": 20,
+			"remove_char": " "
+			}
+		},
+		{"RegexExtractor": {
+			"entity_name": "Services",
+			"extraction_regex": "(?<=Complaint)(\\s*:\\s*)((Data\\sService|Combo\\sPackage|Voice|Blackberry|SMS)?)(?=\\s*:\\s*Recurring)",
+			"remove_char": " ",
+			"replace_char": [":",""]
+			}
+		}
+	]
+	}
+]

@@ -1,0 +1,232 @@
+[
+	{"flow":"LTP_NO_LOAD_RECEIVE",
+	"requires_attachment": false,
+	"atoms":[
+		{"PhoneNumberExtractor": {
+			"exclusion_list":
+			[
+			"requestor phone", 
+			"contact phone", 
+			"requestor contact",
+			"requestor's phone",
+			"contac's phone",
+			"requestor's contact"
+			],
+			"first_digit":9
+			}
+		},
+		{"RegexExtractor": {
+			"entity_name": "SEEDING_DATE",
+			"extraction_regex":"((seed|sedd|seeed)(.{1,50})(\\b((?:[1-9]|0[1-9]|[1-2][0-9]|3[0-1]))(\\b|$)))|((\\b1st)|(21st)|(31st)|(\\b2nd)|(22nd)|(10th)|(11th)|(12th)|(13th)|(\\b3rd)|(23rd)|([1-2]?(0|[4-9])th))",
+			"length_limit":2,
+			"integer_indicator": true,
+			"unique_indicator":true,
+			"default_value": "datetime.datetime.now().strftime('%d')"
+			}
+		}
+	]
+	},
+	{"flow":"Rated Events Extraction",
+	"requires_attachment": false,
+	"atoms":[
+		{"PhoneNumberExtractor": {
+			"exclusion_list":
+			[
+			"requestor phone", 
+			"contact phone", 
+			"requestor contact",
+			"requestor's phone",
+			"contac's phone",
+			"requestor's contact"
+			],
+			"first_digit":9
+			}
+		},
+		{"DateRangeExtractor": {
+			"from_range_name": "DATE_FROM",
+			"to_range_name": "DATE_TO",
+			"from_range_epoch_name": "DATE_FROM_EPOCH",
+			"to_range_epoch_name": "DATE_TO_EPOCH",
+			"time_zone": "Asia/Manila"
+			}
+		},
+		{"RegexExtractor": {
+			"entity_name": "DATA",
+			"extraction_regex": "data|internet",
+			"indicator":true
+			}
+		},
+		{"RegexExtractor": {
+			"entity_name": "VOICE",
+			"extraction_regex": "voice|call(s?)",
+			"indicator":true
+			}
+		},
+		{"RegexExtractor": {
+			"entity_name": "SMS",
+			"extraction_regex": "sms|text|txt|msg|messag(e?)(s?)",
+			"indicator":true
+			}
+		},
+		{"RegexExtractor": {
+			"entity_name": "ROAMING_IND",
+			"extraction_regex": "\\sroaming|\\sroam\\s",
+			"indicator":true
+			}
+		}
+	]
+	},
+	{"flow":"Hold Activity Cancellation",
+	"requires_attachment": false,
+	"atoms":[
+		{"PhoneNumberExtractor": {
+			"entity_name": "MSISDN",
+			"exclusion_list":
+			[
+			"requestor phone", 
+			"contact phone", 
+			"requestor contact",
+			"requestor's phone",
+			"contac's phone",
+			"requestor's contact"
+			],
+			"first_digit":9
+			}
+		},
+		{"RegexExtractor": {
+			"entity_name": "ORDER_ID",
+			"extraction_regex": "(\\D\\d{9}\\d?)([a]|[A])",
+			"integer_indicator": true
+			}
+		}
+	]
+	},
+	{"flow":"MEDIATION_REPORT",
+	"requires_attachment": true,
+	"atoms":[
+		{"GlobeAsmmExtractor":{
+			"entity_name": "FILE_IDENTIFIER"
+			}
+		},
+		{"RegexExtractor":{
+			"entity_name": "FILE_IDENTIFIER",
+			"extraction_regex": "(?:^|\\D)(\\d{15})(?:\\D|$)",
+			"remove_char": "[^0-9]"
+			}
+		}
+		]
+	},
+	{"flow":"Reconnection",
+	"requires_attachment": false,
+	"atoms":[
+		{"CreateDateExtractor":{
+			"entity_name": "TICKET_DATE",
+			"timezone_offset": 13
+			}
+		},
+		{"PhoneNumberExtractor": {
+			"exclusion_list":
+			[
+			"requestor phone", 
+			"contact phone", 
+			"requestor contact",
+			"requestor's phone",
+			"contac's phone",
+			"requestor's contact"
+			],
+			"first_digit":9
+			}
+		}
+		]
+	},
+	{"flow":"Duo Alignment",
+	"requires_attachment": false,
+	"atoms":[
+		{"GlobeDuoalignmentExtractor":{
+			"entity_name": "Default"
+			}
+		}
+		]
+	},
+	{"flow":"Bulk Barring",
+	"requires_attachment": true,
+	"atoms":[
+		{"GlobeBulkbarringExtractor":{
+			"file_entity_name": "FILE_NAME",
+			"data_entity_name": "FILE_DATA"
+			}
+		}
+		]
+	},
+	{"flow":"SRM Extraction",
+        "requires_attachment": true,
+        "atoms":[
+				{
+				"GlobeSrmExtractionExtractor": {}
+				},
+				{"RegexExtractor":{
+					"entity_name": "Request_Type",
+					"extraction_regex": "(?<=Request\\sType(?!\\n)).*",
+					"remove_char": ":",
+					"replace_char": ["^\\s",""]
+					}
+				},
+				{"RegexExtractor":{
+					"entity_name": "Resource_Type",
+					"extraction_regex": "(?<=Resource\\sType(?!\\n)).*",
+					"remove_char": ":",
+                                        "replace_char": ["^\\s",""]
+					}
+				},
+				{"RegexExtractor":{
+					"entity_name": "Resource",
+					"extraction_regex": "(?<=Resource)(:?)(\\s?)\\d.*",
+					"remove_char": ":",
+                                        "replace_char": ["^\\s",""]
+					}
+				},
+				{"RegexExtractor":{
+					"entity_name": "Status",
+					"extraction_regex": "(?<=Status(?!\\n)).*",
+					"remove_char": ":",
+                                        "replace_char": ["^\\s",""]
+					}
+				},
+				{"RegexExtractor":{
+					"entity_name": "Category",
+					"extraction_regex": "(?<=Category(?!\\n)).*",
+					"remove_char": ":",
+                                        "replace_char": ["^\\s",""]
+					}
+				},
+				{"RegexExtractor":{
+					"entity_name": "Area_Name",
+					"extraction_regex": "(?<=Area\\sName(?!\\n)).*",
+					"remove_char": ":",
+                                        "replace_char": ["^\\s",""]
+					}
+				},
+				{"RegexExtractor":{
+					"entity_name": "Post_Pre",
+					"extraction_regex": "(?<=Post\\s\/\\sPre(?!\\n)).*",
+					"remove_char": ":",
+                                        "replace_char": ["^\\s",""]
+					}
+				},
+				{"RegexExtractor":{
+					"entity_name": "Date_From",
+					"extraction_regex": "(?<=Date\\sFrom(?!\\n)).*",
+					"remove_char": ":",
+                                        "replace_char": ["^\\s",""]
+					}
+				},
+				{"RegexExtractor":{
+					"entity_name": "Date_To",
+					"extraction_regex": "(?<=Date\\sTo(?!\\n)).*",
+					"remove_char": ":",
+					"replace_char": ["^\\s",""]
+					}
+				}
+                ]
+        }
+]

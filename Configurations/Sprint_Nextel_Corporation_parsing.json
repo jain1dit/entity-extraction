@@ -1,0 +1,146 @@
+[
+	{"flow":"Sprint Clear PI PTN",
+	"requires_attachment": false,
+	"atoms":[
+		{"PhoneNumberExtractor": {
+			"entity_name": "PTN",
+			"exclusion_list": ["Temp PTN","Temp","Tempptn"],
+			"exclusion_offset": 30
+			}
+		}
+	]
+	},
+	{"flow":"complete order",
+	"requires_attachment": false,
+	"atoms":[
+		{"RegexExtractor": {
+			"entity_name": "Order_Number",
+			"extraction_regex":"((COM\\d)|(DM\\d{2}))-?O-?\\d{6}\\d?\\d?",
+			"remove_char": "-",
+			"upper_case": true
+			}
+		}
+	]
+	},
+	{"flow":"Sprint Cancel Order",
+	"requires_attachment": false,
+	"atoms":[
+		{"RegexExtractor": {
+			"entity_name": "Order_Number",
+			"extraction_regex":"((COM\\d)|(DM\\d{2}))-?O-?\\d{6}\\d?\\d?",
+			"remove_char": "-",
+			"upper_case": true
+			}
+		}
+	]
+	},
+	{"flow":"CSM-RPL Production Sanity",
+	"requires_attachment": false,
+	"atoms":[
+		{"PhoneNumberExtractor": {
+			"entity_name": "PTN",
+			"inclusion_list": ["PTN"],
+			"inclusion_offset": 20
+			}
+		}
+	]
+	},
+	{"flow":"Sprint_INCORRECT MPD DATE CORRECTED",
+	"requires_attachment": false,
+	"atoms":[
+		{"RegexExtractor": {
+			"entity_name": "BAN",
+			"extraction_regex": "(^|\\D)\\d{9}(\\b|\\D)",
+			"exclusion_list": ["Secondary", "secondary"],
+			"exclusion_offset": 30,
+			"unique_indicator": true,
+			"integer_indicator": true
+			}
+		}
+	]
+	},
+	{"flow":"Advance MRC Threshold Break",
+	"requires_attachment": false,
+	"atoms":[
+		{"RegexExtractor": {
+			"entity_name": "TZ",
+			"extraction_regex": "(TZ|Time Zone)(\\s{,5}?)([\\d]+)",
+			"remove_char": "[^0-9]"
+			}
+		}
+	]
+	},
+	{"flow":"Repush Order Line",
+	"requires_attachment": false,
+	"atoms":[
+		{"SprintRepushExtractor": {
+			"entity_name": "Order_Number"
+			}
+		}
+	]
+	},
+	{"flow":"SPRINT Prepaid First RC",
+	"requires_attachment": false,
+	"atoms":[
+		{"RegexExtractor": {
+			"entity_name": "BAN_SUBSCRIBER",
+			"extraction_regex": "(^|\\D)\\d{9}(,|;)\\d{11}(\\b|\\D|$)",
+			"remove_char": "(\\n|\\s)",
+			"replace_char": [",",";"]
+			}
+		}
+	]
+	},
+	{"flow":"Sprint_Mask Memo",
+	"requires_attachment": false,
+	"atoms":[
+		{"RegexExtractor": {
+			"entity_name": "BAN",
+			"extraction_regex": "(^|\\D)\\d{9}(\\b|\\D)",
+			"inclusion_list": ["BAN", "BAN:"],
+			"inclusion_offset": 20,
+			"unique_indicator": false,
+			"integer_indicator": true
+			}
+		},
+		{"RegexExtractor": {
+			"entity_name": "Memo_ID",
+			"extraction_regex": "(^|\\D)I?\\d?\\d{10}(\\b|\\D)",
+			"inclusion_list": ["Memo ID"],
+			"inclusion_offset": 20,
+			"remove_char": " ",
+			"upper_case": true
+			}
+		},
+		{"RegexExtractor": {
+			"entity_name": "Memo_Details_to_Remove",
+			"extraction_regex": "Memo\\s{,3}Details\\s{,3}to\\s{,3}Remove:(.+)\\n",
+			"remove_char": "(m|M)emo\\s{,3}(d|D)etails\\s{,3}(T|t)o\\s{,3}(r|R)emove:"
+			}
+		}
+	]
+	},
+	{"flow":"SPRINT Prepaid Zero RC",
+	"requires_attachment": false,
+	"atoms":[
+		{"RegexExtractor": {
+			"entity_name": "BAN_SUBSCRIBER",
+			"extraction_regex": "(^|\\D)\\d{9}(,|;)\\d{11}(\\b|\\D|$)",
+			"remove_char": "(\\n|\\s)",
+			"replace_char": [",",";"]
+			}
+		}
+	]
+	},
+	{"flow":"SPRINT Linkage Wrapper",
+	"requires_attachment": false,
+	"atoms":[
+		{"RegexExtractor": {
+			"entity_name": "TZ",
+			"extraction_regex": "(TZ|Time Zone)(\\s{,5}?)([\\d]+)",
+			"remove_char": "[^0-9]"
+			}
+		}
+	]
+	}
+]

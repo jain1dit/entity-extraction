@@ -1,0 +1,94 @@
+[
+	{"flow":"Un-enroll AutoPay",
+	"requires_attachment": false,
+	"atoms":[
+		{"RegexExtractor": {
+			"entity_name": "BAN",
+			"extraction_regex": "(^|\\D)\\d{9}(\\b|\\D)",
+			"unique_indicator": true,
+			"integer_indicator": true
+			}
+		}
+	]
+	},
+	{"flow":"Cricket Cancel Port In Eligibility Check",
+	"requires_attachment": false,
+	"atoms":[
+		{"CricketEligibilityCheck": {
+			"entity_name": "CTN"}
+		}
+	]
+	},
+	{"flow":"Cancel Port In/Out",
+	"requires_attachment": false,
+	"atoms":[
+		{"PhoneNumberExtractor": {
+			"entity_name": "PTN"
+			}
+		},
+		{"RegexExtractor": {
+			"entity_name": "BAN",
+			"extraction_regex": "(^|\\D)\\d{9}(\\b|\\D)",
+			"unique_indicator": true,
+			"integer_indicator": true
+			}
+		}
+	]
+	},
+	{"flow":"Complete Port In/Out",
+	"requires_attachment": false,
+	"atoms":[
+		{"PhoneNumberExtractor": {
+			"entity_name": "PTN"
+			}
+		}
+	]
+	},
+	{"flow":"Complete Order",
+	"requires_attachment": false,
+	"atoms":[
+		{"PhoneNumberExtractor": {
+			"entity_name": "PTN"
+			}
+		},
+		{"RegexExtractor": {
+			"entity_name": "BAN",
+			"extraction_regex": "(^|\\D)\\d{9}(\\b|\\D)",
+			"unique_indicator": true,
+			"integer_indicator": true
+			}
+		},
+		{"RegexExtractor": {
+			"entity_name": "Order ID",
+			"extraction_regex":"(ORD)-?O-?\\d{6}\\d?\\d?",
+			"remove_char": "-",
+			"upper_case": true
+			}
+		}
+	]
+	},
+	{"flow":"BLDECMPRECON",
+	"requires_attachment": false,
+	"atoms":[]
+	},
+	{"flow":"Rejects in Confirmation",
+	"requires_attachment": false,
+	"atoms":[]
+	},
+	{"flow":"Portal Orders Payment Statistics for Last Hour",
+	"requires_attachment": false,
+	"atoms":[]
+	},
+	{"flow":"CSM Pending Payments From CSPYMREPRCSS",
+	"requires_attachment": false,
+	"atoms":[]
+	},
+	{"flow":"Rejects in billing",
+	"requires_attachment": false,
+	"atoms":[]
+	},
+	{"flow":"BLDECOMSUBTX",
+	"requires_attachment": false,
+	"atoms":[]
+	}
+]
